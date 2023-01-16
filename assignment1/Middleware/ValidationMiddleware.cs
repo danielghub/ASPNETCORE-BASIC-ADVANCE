@@ -15,7 +15,7 @@ namespace assignment1.Middleware
         {
             _next = next;
         }
-
+        //This is auto generated from the middleware template, you need to check httpContext, this will add in the request pipeline
         public async Task Invoke(HttpContext httpContext)
         {  
             _context = httpContext; 

@@ -3,7 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
 app.UseRouting();
-app.UseValidationMiddleware();
+//app.MapControllerRoute()
+app.UseValidationMiddleware(); //Validation Middleware
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
