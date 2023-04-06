@@ -42,9 +42,15 @@ namespace assignment1.Middleware
     // Extension method used to add the middleware to the HTTP request pipeline.
     public static class MiddlewareExtensions
     {
+        private static readonly RequestDelegate _next;
         public static IApplicationBuilder UseValidationMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<ValidationMiddleware>();
+        }
+        public static ValidationMiddleware validationMiddleware(this ValidationMiddleware sampleOnly)
+        {
+
+            return new ValidationMiddleware(_next);
         }
     }
 }
