@@ -129,8 +129,8 @@ namespace CRUDTests
 
             //Assert
             Assert.Null(country_response_from_get_method);
-        } 
-
+        }
+        [Fact]
         public void GetCountryByCountryId_ValidCountryID()
         {
             //Arrange
