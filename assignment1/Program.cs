@@ -1,9 +1,13 @@
 using assignment1.Middleware;
+using ServiceContracts;
+using Services;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); // Add all controllers with a predefined Controller Class name and added as a service in the DI;
 var app = builder.Build();
 app.MapControllers(); //Best shortcut way to map all the controllers in the route
 
+builder.Services.AddSingleton<ICountryService,CountriesService>();
 /* optional to use to map the controllers
 app.UseRouting(); 
 app.UseEndpoints(endpoints =>
