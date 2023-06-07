@@ -18,7 +18,7 @@ namespace CRUDTests
         private readonly ITestOutputHelper _testOutputHelper; //output the test case like a console
         public PersonServiceTest(ITestOutputHelper testOutputHelper)
         {
-            _personService = new PersonService();
+            _personService = new PersonService(false);
             _countryService = new CountriesService(false);
             _testOutputHelper = testOutputHelper;
         }
@@ -318,7 +318,7 @@ namespace CRUDTests
             _testOutputHelper.WriteLine("Actual:");
             foreach (PersonResponse person_response_from_add in person_response_list_from_add)
             {
-                if (person_response_from_add.PersonName.Contains("SomeName", StringComparison.OrdinalIgnoreCase))
+                if (person_response_from_add.PersonName.Contains("SomeName1", StringComparison.OrdinalIgnoreCase))
                 {
                     Assert.Contains(person_response_from_add, person_list_from_search);
                 }

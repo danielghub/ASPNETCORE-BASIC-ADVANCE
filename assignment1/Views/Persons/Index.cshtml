@@ -1,0 +1,61 @@
+﻿@using ServiceContracts.DTO;
+@model IEnumerable<PersonResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<form action="~/persons/index" method="get">
+<h1>Persons</h1>
+<div class="box flex">
+    <div class="flex">
+            <select class="form-input" name="searchBy">
+            @foreach (var item in ViewBag.SearchFields)
+            {
+                    <option value="@item.Key">@item.Value</option>
+                }
+        </select>
+    </div>
+    <div>
+        <input type="search" id="Search" class="form-input" placeholder="Search" name="searchString"/>
+    </div>
+    <div>
+        <button class="button">Search</button>       
+    </div>
+    <div>
+         <button class="button">Clear</button>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Person Name</th>
+            <th>Email</th>
+            <th>Date of Birth</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Country</th>
+            <th>Address</th>
+            <th>Receive News Letters</th>
+        </tr>
+        
+    </thead>
+    <tbody>
+        @foreach (PersonResponse person in Model)
+        {
+         <tr>
+            <td>@person.PersonName</td>
+            <td>@person.Email</td>
+            <td>@person.DateOfBirth?.ToString("dd MM yyyy")</td>
+            <td>@person.Age</td>
+            <td>@person.Gender</td>
+            <td>@person.Country</td>
+            <td>@person.Address</td>
+            <td>@person.ReceiveNewsLetter</td>
+
+        </tr>
+        }
+     
+    </tbody>
+</table>
+</form>

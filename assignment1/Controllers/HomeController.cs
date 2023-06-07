@@ -1,9 +1,9 @@
 ﻿using assignment1.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace assignment1.Controller
+namespace assignment1.Controllers
 {
-    public class HomeController : ControllerBase
+    public class HomeController : Controller
     {
         //Access the current environment 
         private readonly IWebHostEnvironment _webHostEnvironment;

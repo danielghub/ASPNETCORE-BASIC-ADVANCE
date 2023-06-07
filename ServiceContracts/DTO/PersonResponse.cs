@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace ServiceContracts.DTO
 {
     /// <summary>
-    /// Represents DTO class that us ysed as return type of most methods of person service
+    /// Represents DTO class that used as return type of most methods of person service
     /// </summary>
     public class PersonResponse
     {
