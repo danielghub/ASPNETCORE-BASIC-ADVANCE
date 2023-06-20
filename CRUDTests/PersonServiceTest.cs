@@ -16,10 +16,12 @@ namespace CRUDTests
         private readonly IPersonsService _personService;
         private readonly ICountryService _countryService;
         private readonly ITestOutputHelper _testOutputHelper; //output the test case like a console
-        public PersonServiceTest(ITestOutputHelper testOutputHelper)
+        private readonly PersonDBContext _db;
+        public PersonServiceTest(ITestOutputHelper testOutputHelper,PersonDBContext personDBContext)
         {
-            _personService = new PersonService(false);
-            _countryService = new CountriesService(false);
+            _db = personDBContext;
+            _personService = new PersonService(_db);
+            _countryService = new CountriesService(_db);
             _testOutputHelper = testOutputHelper;
         }
         #region AddPerson

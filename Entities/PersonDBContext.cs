@@ -13,6 +13,7 @@ namespace Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
             modelBuilder.Entity<Country>().ToTable("Countries");
             modelBuilder.Entity<Person>().ToTable("Persons");
             //Seed persons to DB
@@ -29,7 +30,7 @@ namespace Entities
             {
                 modelBuilder.Entity<Person>().HasData(person);
             }
-           
+            
             base.OnModelCreating(modelBuilder);
         }
     }

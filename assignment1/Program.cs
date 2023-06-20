@@ -12,10 +12,12 @@ builder.Services.AddMvcCore();
 //add services into IoC container
 //Pattern for injecting a service to DI,
 //(Interface, object) from which where you need to assign the interface to an object after its creation to the IoC
-builder.Services.AddSingleton<IPersonsService, PersonService>(); //Singleton to have this service available at a lifetime of the application
-builder.Services.AddSingleton<ICountryService,CountriesService>();
-
+//builder.Services.AddSingleton<IPersonsService, PersonService>(); //Singleton to have this service available at a lifetime of the application
+//builder.Services.AddSingleton<ICountryService,CountriesService>();
+builder.Services.AddScoped<IPersonsService, PersonService>(); //Singleton to have this service available at a lifetime of the application
+builder.Services.AddScoped<ICountryService, CountriesService>();
 //Inject DBcontext
+//By Default, an EF is configured Scoped Service. We need to update the injection above
 builder.Services.AddDbContext<PersonDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Telling Aspnet core that we'll be using a sql server
 
 

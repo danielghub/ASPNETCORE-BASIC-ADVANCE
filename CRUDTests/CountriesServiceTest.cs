@@ -10,10 +10,11 @@ namespace CRUDTests
     public class CountriesServiceTest
     {
         private readonly ICountryService _countryService;
-
-        public CountriesServiceTest()
+        private readonly PersonDBContext _db;
+        public CountriesServiceTest(PersonDBContext personDBContext)
         {
-            _countryService = new CountriesService(false);
+            _db = personDBContext;
+            _countryService = new CountriesService(_db);
         }
         #region Add Country
         [Fact]

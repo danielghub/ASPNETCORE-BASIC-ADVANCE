@@ -4,84 +4,19 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using System.ComponentModel.DataAnnotations;
 using ServiceContracts.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
     public class PersonService : IPersonsService
     {
         //data store
-        private readonly List<Person> _persons;
         private readonly ICountryService _countryService;
-        public PersonService(bool initialize = true)
+        private readonly PersonDBContext _db;
+        public PersonService(PersonDBContext personDBContext, ICountryService countryService)
         {
-            _countryService = new CountriesService();
-            _persons = new List<Person>();
-            if (initialize)
-            {
-                _persons.AddRange(new List<Person>()
-                {
-                   
-                  
-                    new Person(){ PersonId = Guid.Parse("BDD9A40F-0333-4AB2-A928-27BBCDDFF99A"), 
-                        PersonName = "Radcliffe", 
-                        Gender = "Male", 
-                        Email ="rbeckles0@yahoo.com", 
-                        DateOfBirth = DateTime.Parse("4/9/2023"), 
-                        Address = "Room 1131", ReceiveNewsLetters = 
-                        false, 
-                        CountryID = Guid.Parse("270AA19E-30A5-451E-9BD8-52D14095F0E3")},
-
-                     new Person(){ PersonId = Guid.Parse("E2A1DCF7-1085-4284-BF91-2BBE2D73868C"),
-                        PersonName = "Maurie",
-                        Gender = "Male",
-                        Email ="mladds1@diigo.com",
-                        DateOfBirth = DateTime.Parse("1/31/2023"),
-                        Address = "Apt 1024", ReceiveNewsLetters =
-                        false,
-                        CountryID = Guid.Parse("E7AB4067-A0DD-4331-8111-D550E05F408C")},
-
-                      new Person(){ PersonId = Guid.Parse("E4FAB614-B871-44E3-8501-0C23406D31C1"),
-                          PersonName = "Hamilton",
-                        Gender = "Female",
-                        Email ="halthrop2@nytimes.com",
-                        DateOfBirth = DateTime.Parse("4/9/1995"),
-                        Address = "Room 11321", ReceiveNewsLetters =
-                        false,
-                        CountryID = Guid.Parse("59676058-EFAA-4B0C-AC9B-1081C30BEC40")},
-
-                       new Person(){ PersonId = Guid.Parse("44156368-ECBB-4E48-9D24-2989F7C61F39"),
-                        PersonName = "Jenny",
-                        Gender = "Female",
-                        Email ="JennyPa@yahoo.com",
-                        DateOfBirth = DateTime.Parse("9/9/1992"),
-                        Address = "Room 192 St ptr sqr", ReceiveNewsLetters =
-                        false,
-                        CountryID = Guid.Parse("DC16272C-CA08-4ECD-A692-76A15B8B3408")},
-
-                        new Person(){ PersonId = Guid.Parse("8CBBD3EC-615F-4DE2-80C0-666E5ECD051D"),
-                        PersonName = "Randolp",
-                        Gender = "Male",
-                        Email ="Rndyopl@yahoo.com",
-                        DateOfBirth = DateTime.Parse("1/9/1973"),
-                        Address = "Blk 9 lot 2", ReceiveNewsLetters =
-                        false,
-                        CountryID = Guid.Parse("4D5EA2CB-53DA-4601-A7B4-C03D496C85E5")},
-
-                         new Person(){ PersonId = Guid.Parse("7B103D06-F0F3-40DD-8C8A-6B923250A6BE"),
-                        PersonName = "Carter",
-                        Gender = "Male",
-                        Email ="Carter@yahoo.com",
-                        DateOfBirth = DateTime.Parse("4/9/1990"),
-                        Address = "carter 1131", ReceiveNewsLetters =
-                        false,
-                        CountryID = Guid.Parse("299881B2-0EB6-43A3-BDE2-68DF2F2E972E")},
-
-                      
-
-                    
-
-                });
-            }
+            _countryService = countryService;
+            _db = personDBContext;           
         }
         private PersonResponse ConvertPersonToPersonResponse(Person person)
         {
@@ -101,21 +36,21 @@ namespace Services
             ValidationHelper.ModelValidation(personAddRequest);
             Person person = personAddRequest.ToPerson();
             person.PersonId = Guid.NewGuid();
-            _persons.Add(person);
+            _db.Persons.Add(person);
         
             return ConvertPersonToPersonResponse(person);
         }
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _persons.Select(x => x.ToPersonResponse()).ToList();
+            return _db.Persons.ToList().Select(x => ConvertPersonToPersonResponse(x)).ToList();
         }
 
         public PersonResponse? GetPersonByPersonID(Guid? personID)
         {
             if (personID == null) return null;
 
-            Person? person = _persons.FirstOrDefault(x => x.PersonId == personID);
+            Person? person = _db.Persons.FirstOrDefault(x => x.PersonId == personID);
 
             if (person == null) return null;
 
@@ -212,7 +147,7 @@ namespace Services
                 throw new ArgumentNullException(nameof(Person));
             //validation
             ValidationHelper.ModelValidation(personUpdateRequest);
-           Person? matchingPerson =  _persons.FirstOrDefault(temp => temp.PersonId == personUpdateRequest.PersonID);
+           Person? matchingPerson =  _db.Persons.FirstOrDefault(temp => temp.PersonId == personUpdateRequest.PersonID);
 
             if(matchingPerson == null)
             {
@@ -234,12 +169,12 @@ namespace Services
             if (personID == null)
                 throw new ArgumentNullException(nameof(personID));
 
-            Person? person = _persons.FirstOrDefault(temp => temp.PersonId == personID);
+            Person? person = _db.Persons.FirstOrDefault(temp => temp.PersonId == personID);
 
             if (person == null)
                 return false;
 
-            _persons.RemoveAll(temp => temp.PersonId == personID);
+            //_db.Persons.ExecuteDelete(temp => temp.PersonId == personID);
 
             return true;
         }
