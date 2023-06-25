@@ -18,7 +18,8 @@ builder.Services.AddScoped<IPersonsService, PersonService>(); //Singleton to hav
 builder.Services.AddScoped<ICountryService, CountriesService>();
 //Inject DBcontext
 //By Default, an EF is configured Scoped Service. We need to update the injection above
-builder.Services.AddDbContext<PersonDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Telling Aspnet core that we'll be using a sql server
+builder.Services.AddDbContext<PersonDBContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Telling Aspnet core that we'll be using a sql server
 
 
 /* optional to use to map the controllers

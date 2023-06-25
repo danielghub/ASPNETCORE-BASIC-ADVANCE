@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -16,12 +17,12 @@ namespace CRUDTests
         private readonly IPersonsService _personService;
         private readonly ICountryService _countryService;
         private readonly ITestOutputHelper _testOutputHelper; //output the test case like a console
-        private readonly PersonDBContext _db;
+     
         public PersonServiceTest(ITestOutputHelper testOutputHelper,PersonDBContext personDBContext)
         {
-            _db = personDBContext;
-            _personService = new PersonService(_db);
-            _countryService = new CountriesService(_db);
+            //Supply DBContext Directly with Options Builder as it is required on the PersonDBContext base class.
+            _countryService = new CountriesService(new PersonDBContext(new DbContextOptionsBuilder().Options));
+            _personService = new PersonService(new PersonDBContext(new DbContextOptionsBuilder().Options), _countryService);         
             _testOutputHelper = testOutputHelper;
         }
         #region AddPerson

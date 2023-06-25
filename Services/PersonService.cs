@@ -36,14 +36,17 @@ namespace Services
             ValidationHelper.ModelValidation(personAddRequest);
             Person person = personAddRequest.ToPerson();
             person.PersonId = Guid.NewGuid();
-            _db.Persons.Add(person);
-        
+            //_db.Persons.Add(person);
+            _db.sp_InsertPerson(person);
             return ConvertPersonToPersonResponse(person);
         }
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _db.Persons.ToList().Select(x => ConvertPersonToPersonResponse(x)).ToList();
+            //Commented, as we created a new process that will trigger the stored prc
+            //return _db.Persons.ToList().Select(x => ConvertPersonToPersonResponse(x)).ToList();
+
+            return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
         }
 
         public PersonResponse? GetPersonByPersonID(Guid? personID)
