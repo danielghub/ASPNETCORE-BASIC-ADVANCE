@@ -14,7 +14,7 @@ namespace Learning_CRUD_dotnetcore.Controllers
         }
         [Route("persons/index")]
         [Route("/")]
-        public IActionResult Index(string? searchBy, string? searchString)
+        public async Task<IActionResult> Index(string? searchBy, string? searchString)
         {
             ViewBag.SearchFields = new Dictionary<string, string>()
             {
@@ -27,7 +27,7 @@ namespace Learning_CRUD_dotnetcore.Controllers
                 { nameof(PersonResponse.CountryId), "Country Id" }
 
             };
-            List<PersonResponse> persons = _personsService.GetFilteredPersons(searchBy,searchString);
+            List<PersonResponse> persons = await _personsService.GetFilteredPersons(searchBy, searchString);
             return View(persons);
         }
 

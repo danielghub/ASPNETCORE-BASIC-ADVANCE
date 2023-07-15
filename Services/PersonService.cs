@@ -12,19 +12,19 @@ namespace Services
     {
         //data store
         private readonly ICountryService _countryService;
-        private readonly PersonDBContext _db;
-        public PersonService(PersonDBContext personDBContext, ICountryService countryService)
+        private readonly ApplicationDBContext _db;
+        public PersonService(ApplicationDBContext personDBContext, ICountryService countryService)
         {
             _countryService = countryService;
             _db = personDBContext;           
         }
-        private PersonResponse ConvertPersonToPersonResponse(Person person)
-        {
-            PersonResponse personResponse = person.ToPersonResponse();
-            personResponse.Country = _countryService.GetCountryByCountryId(person.CountryID)?.CountryName;
-            return personResponse;
-        }
-        public PersonResponse AddPerson(PersonAddRequest? personAddRequest)
+        //private PersonResponse ConvertPersonToPersonResponse(Person person)
+        //{
+        //    PersonResponse personResponse = person.ToPersonResponse();
+        //    personResponse.Country = _countryService.GetCountryByCountryId(person.CountryID)?.CountryName;
+        //    return personResponse;
+        //}
+        public async Task<PersonResponse> AddPerson(PersonAddRequest? personAddRequest)
         {
            
             if(personAddRequest == null) { throw new ArgumentNullException(nameof(PersonAddRequest)); };
@@ -37,32 +37,36 @@ namespace Services
             Person person = personAddRequest.ToPerson();
             person.PersonId = Guid.NewGuid();
             //_db.Persons.Add(person);
-            _db.sp_InsertPerson(person);
-            return ConvertPersonToPersonResponse(person);
+           await _db.sp_InsertPerson(person);
+
+
+            return person.ToPersonResponse();
+            //return ConvertPersonToPersonResponse(person);
         }
 
-        public List<PersonResponse> GetAllPersons()
+        public async Task<List<PersonResponse>> GetAllPersons()
         {
-            //Commented, as we created a new process that will trigger the stored prc
-            //return _db.Persons.ToList().Select(x => ConvertPersonToPersonResponse(x)).ToList();
+            var persons = _db.Persons.Include("Country").ToList();
 
-            return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
+            return await _db.Persons.Select(x => x.ToPersonResponse()).ToListAsync();
+            //7-12-2023 Commented as we added a new column and this proc should be updated
+            //return _db.sp_GetAllPersons().Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
         }
 
-        public PersonResponse? GetPersonByPersonID(Guid? personID)
+        public async Task<PersonResponse?> GetPersonByPersonID(Guid? personID)
         {
             if (personID == null) return null;
 
-            Person? person = _db.Persons.FirstOrDefault(x => x.PersonId == personID);
+            Person? person = await _db.Persons.FirstOrDefaultAsync(x => x.PersonId == personID);
 
             if (person == null) return null;
 
             return person.ToPersonResponse();
         }
        
-        public List<PersonResponse> GetFilteredPersons(string searchBy, string searchString)
+        public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string searchString)
         {
-            List<PersonResponse> allPersons = GetAllPersons();
+            List<PersonResponse> allPersons = await GetAllPersons();
             List<PersonResponse> MatchingPersons = allPersons;
 
             if(String.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
@@ -102,7 +106,7 @@ namespace Services
             return MatchingPersons;
         }
 
-        public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string? sortBy, SortOrderOptions sortOrder)
+        public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string? sortBy, SortOrderOptions sortOrder)
         {
             if (string.IsNullOrEmpty(sortBy))
                 return allPersons;
@@ -144,13 +148,13 @@ namespace Services
             return allPersons;
         }
 
-        public PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest)
+        public async Task<PersonResponse> UpdatePerson(PersonUpdateRequest? personUpdateRequest)
         {
             if (personUpdateRequest == null)
                 throw new ArgumentNullException(nameof(Person));
             //validation
             ValidationHelper.ModelValidation(personUpdateRequest);
-           Person? matchingPerson =  _db.Persons.FirstOrDefault(temp => temp.PersonId == personUpdateRequest.PersonID);
+           Person? matchingPerson =  await _db.Persons.FirstOrDefaultAsync(temp => temp.PersonId == personUpdateRequest.PersonID);
 
             if(matchingPerson == null)
             {
@@ -166,13 +170,13 @@ namespace Services
             return matchingPerson.ToPersonResponse();
         }
 
-        public bool DeletePerson(Guid? personID)
+        public async Task<bool> DeletePerson(Guid? personID)
         {
 
             if (personID == null)
                 throw new ArgumentNullException(nameof(personID));
 
-            Person? person = _db.Persons.FirstOrDefault(temp => temp.PersonId == personID);
+            Person? person = await _db.Persons.FirstOrDefaultAsync(temp => temp.PersonId == personID);
 
             if (person == null)
                 return false;

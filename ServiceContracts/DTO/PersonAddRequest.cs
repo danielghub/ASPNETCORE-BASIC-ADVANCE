@@ -19,10 +19,10 @@ namespace ServiceContracts.DTO
         public Guid? CountryId { get; set; }
         public bool ReceiveNewsLetter { get; set; }
         public string? Address { get; set; }
-
+        public string? TIN { get; set; }
         public Person ToPerson()
         {
-            return new Person { Address = Address, CountryID = CountryId, DateOfBirth = DateOfBirth, Email = Email, Gender = Gender.ToString(), PersonName = PersonName , ReceiveNewsLetters = ReceiveNewsLetter  };
+            return new Person { Address = Address, CountryID = CountryId, DateOfBirth = DateOfBirth, Email = Email, Gender = Gender.ToString(), PersonName = PersonName , ReceiveNewsLetters = ReceiveNewsLetter, TIN = TIN  };
         }
     }
 }

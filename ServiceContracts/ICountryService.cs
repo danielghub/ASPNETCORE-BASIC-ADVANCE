@@ -1,5 +1,4 @@
 ﻿using ServiceContracts.DTO;
-
 namespace ServiceContracts
 {
     /// <summary>
@@ -12,19 +11,19 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="countryAddRequest"></param>
         /// <returns></returns>
-        CountryResponse AddCountry(CountryAddRequest? countryAddRequest);
+        Task<CountryResponse> AddCountry(CountryAddRequest? countryAddRequest);
         /// <summary>
         /// Returns all countries from the list
         /// </summary>
         /// <returns>a list of object from CountryResponse</returns>
-        List<CountryResponse> GetAllCountries();
+        Task<List<CountryResponse>> GetAllCountries();
 
         /// <summary>
         /// Return a country obj based on the given country ID
         /// </summary>
         /// <param name="countryID"></param>
         /// <returns>matching country as Country response object</returns>
-        CountryResponse? GetCountryByCountryId(Guid? countryID);
+        Task<CountryResponse?> GetCountryByCountryId(Guid? countryID);
 
     }
 }

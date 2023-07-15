@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 
@@ -6,12 +7,12 @@ namespace Services
 {
     public class CountriesService : ICountryService
     {
-        private readonly  PersonDBContext _db;
-        public CountriesService(PersonDBContext personDBContext)
+        private readonly  ApplicationDBContext _db;
+        public CountriesService(ApplicationDBContext personDBContext)
         {
             _db = personDBContext;
         }
-        public CountryResponse AddCountry(CountryAddRequest? countryAddRequest)
+        public async Task<CountryResponse> AddCountry(CountryAddRequest? countryAddRequest)
         {
             //Parameter can't be null
             if(countryAddRequest == null)
@@ -32,21 +33,21 @@ namespace Services
             //Convert object from DTO to domain model
             Country country = countryAddRequest.ToCountry();
             country.CountryId = Guid.NewGuid();
-            _db.Add(country);
-            _db.SaveChanges();
+            _db.Countries.Add(country);
+            await _db.SaveChangesAsync();
             return country.ToCountryResponse();
         }
 
-        public List<CountryResponse> GetAllCountries()
+        public async Task<List<CountryResponse>> GetAllCountries()
         {
-            return _db.Countries.Select(country => country.ToCountryResponse()).ToList();
+            return await _db.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
         }
 
-        public CountryResponse? GetCountryByCountryId(Guid? countryID)
+        public async Task<CountryResponse?> GetCountryByCountryId(Guid? countryID)
         {
             if (countryID == null) return null;
 
-           Country? country_response_from_list = _db.Countries.FirstOrDefault(x => x.CountryId == countryID);
+           Country? country_response_from_list = await _db.Countries.FirstOrDefaultAsync(x => x.CountryId == countryID);
 
             if (country_response_from_list == null) return null;
 
