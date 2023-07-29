@@ -36,8 +36,9 @@ namespace Services
             ValidationHelper.ModelValidation(personAddRequest);
             Person person = personAddRequest.ToPerson();
             person.PersonId = Guid.NewGuid();
-            //_db.Persons.Add(person);
-           await _db.sp_InsertPerson(person);
+            _db.Persons.Add(person);
+            await _db.SaveChangesAsync();
+            //await _db.sp_InsertPerson(person);
 
 
             return person.ToPersonResponse();
