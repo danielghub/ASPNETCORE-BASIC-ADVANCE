@@ -64,7 +64,7 @@ namespace CRUDTests
 
             Func<Task> action = (async () => await _personService.AddPerson(personAddRequest));
 
-            await action.Should().ThrowAsync<ArgumentNullException>();
+            await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
         public async Task AddPerson_ProperPersonDetails()
@@ -208,7 +208,10 @@ namespace CRUDTests
             _testOutputHelper.WriteLine("Actual:");
             foreach (PersonResponse person_response_from_add in person_response_list_from_add)
             {
-                Assert.Contains(person_response_from_add, person_list_from_search);
+
+
+                //Assert.Contains(person_response_from_add, person_list_from_search);
+                person_list_from_search.Should().Contain(person_response_from_add);
             }
         }
         [Fact]
@@ -257,10 +260,11 @@ namespace CRUDTests
             _testOutputHelper.WriteLine("Actual:");
             foreach (PersonResponse person_response_from_add in person_response_list_from_add)
             {
-                if (person_response_from_add.PersonName.Contains("SomeName1", StringComparison.OrdinalIgnoreCase))
-                {
-                    Assert.Contains(person_response_from_add, person_list_from_search);
-                }
+                //if (person_response_from_add.PersonName.Contains("SomeName1", StringComparison.OrdinalIgnoreCase))
+                //{
+                //    Assert.Contains(person_response_from_add, person_list_from_search);
+                //}
+                person_list_from_search.Should().OnlyContain(temp => temp.PersonName.Contains("SomeName1", StringComparison.OrdinalIgnoreCase));
 
             }
         }
@@ -306,12 +310,13 @@ namespace CRUDTests
 
 
             //Assert
-            for (int i = 0; i < person_response_list_from_add.Count; i++)
-            {
-                //Assert.Equal(person_response_list_from_add[i], person_list_from_sort[i]);
-                person_list_from_sort[i].Should().BeEquivalentTo(person_response_list_from_add[i]);
-            }
-
+            //for (int i = 0; i < person_response_list_from_add.Count; i++)
+            //{
+            //    //Assert.Equal(person_response_list_from_add[i], person_list_from_sort[i]);
+            //    person_list_from_sort[i].Should().BeEquivalentTo(person_response_list_from_add[i]);
+            //}
+            person_list_from_sort.Should().BeEquivalentTo(person_response_list_from_add); //Option 1
+            // person_list_from_sort.Should().BeInAscendingOrder(temp => temp.PersonName);
         }
         #endregion
 
@@ -330,6 +335,8 @@ namespace CRUDTests
            // });
 
             Func<Task> action = (async () => await _personService.UpdatePerson(personUpdateRequest));
+
+           await action.Should().ThrowAsync<ArgumentNullException>();
         }
         //When supplying an invalid person id, should throw argumentexception
         [Fact]
@@ -338,11 +345,15 @@ namespace CRUDTests
             PersonUpdateRequest? personUpdateRequest = _fixture.Build<PersonUpdateRequest>().With(temp => temp.Email, "someonefew1@acc.com").Create();
 
             //Assert
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-            {
+            //await Assert.ThrowsAsync<ArgumentException>(async () =>
+            //{
 
-                await _personService.UpdatePerson(personUpdateRequest);
-            });
+            //    await _personService.UpdatePerson(personUpdateRequest);
+            //});
+
+            Func<Task> action = (async () => await _personService.UpdatePerson(personUpdateRequest));
+
+            await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
         public async Task UpdatePerson_PersonNameIsNull()
@@ -365,7 +376,7 @@ namespace CRUDTests
             //    await _personService.UpdatePerson(person_update_request);
             //});
             Func<Task> action = (async () => await _personService.UpdatePerson(person_update_request));
-           action.Should().ThrowAsync<Argument>
+            await action.Should().ThrowAsync<ArgumentException>();
         }
         [Fact]
         public async Task UpdatePerson_PersonFullDetailsUpdation()
@@ -412,7 +423,8 @@ namespace CRUDTests
 
             bool isDeleted = await _personService.DeletePerson(person_response_from_add.PersonId);
             //Assert
-            Assert.True(isDeleted);
+            //Assert.True(isDeleted);
+            isDeleted.Should().BeTrue();
 
         }
         [Fact]
@@ -421,7 +433,8 @@ namespace CRUDTests
             //Act
             bool isDeleted = await _personService.DeletePerson(Guid.NewGuid());
             //Assert
-            Assert.False(isDeleted);
+            //Assert.False(isDeleted);
+            isDeleted.Should().BeFalse();
 
         }
         #endregion
