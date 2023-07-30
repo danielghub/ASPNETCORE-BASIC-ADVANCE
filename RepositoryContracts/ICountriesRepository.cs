@@ -23,7 +23,7 @@ namespace RepositoryContracts
         /// </summary>
         /// <param name="countryId">CountryId to search</param>
         /// <returns>Matching country or null</returns>
-        Task<Country?> GetCountryByCountryId(Guid countryId);
+        Task<Country?> GetCountryByCountryId(Guid? countryId);
         /// <summary>
         /// a country retrieved by countryName
         /// </summary>

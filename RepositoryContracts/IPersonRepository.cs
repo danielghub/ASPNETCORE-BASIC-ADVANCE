@@ -30,13 +30,13 @@ namespace RepositoryContracts
         /// </summary>
         /// <param name="personID">Person ID or null</param>
         /// <returns>PersonResponse Object or null</returns>
-        Task<PersonResponse?> GetPersonByPersonID(Guid? personID);
+        Task<Person?> GetPersonByPersonID(Guid? personID);
         /// <summary>
         /// Returns all person object based on the given expression
         /// </summary>
         /// <param name="predicate">LINQ expression to check</param>
         /// <returns>Returns all matching person with given condition</returns>
-        Task<List<PersonResponse>> GetFilteredPersons(Expression<Func<Person, bool>> predicate);
+        Task<List<Person>> GetFilteredPersons(Expression<Func<Person, bool>> predicate);
         /// <summary>
         /// Delete a person object based on the person ID
         /// </summary>

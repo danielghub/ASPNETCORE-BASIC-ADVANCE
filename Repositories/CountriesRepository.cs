@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace Repositories
@@ -11,24 +12,26 @@ namespace Repositories
             _db = db;
         }
 
-        public Task<Country> AddCountry(Country country)
-        {
-            throw new NotImplementedException();
+        public async Task<Country> AddCountry(Country country)
+        { 
+            _db.Countries.Add(country);
+            await _db.SaveChangesAsync();
+            return country;
         }
 
-        public Task<List<Country>> GetAllCountries()
+        public async Task<List<Country>> GetAllCountries()
         {
-            throw new NotImplementedException();
+           return await _db.Countries.ToListAsync();
         }
 
-        public Task<Country?> GetCountryByCountryId(Guid countryId)
+        public async Task<Country?> GetCountryByCountryId(Guid? countryId)
         {
-            throw new NotImplementedException();
+            return await _db.Countries.FirstOrDefaultAsync(temp => temp.CountryId == countryId);
         }
 
-        public Task<Country?> GetCountryByCountryName(string countryName)
+        public async Task<Country?> GetCountryByCountryName(string countryName)
         {
-            throw new NotImplementedException();
+            return await _db.Countries.FirstOrDefaultAsync(temp => temp.CountryName == countryName);
         }
     }
 }

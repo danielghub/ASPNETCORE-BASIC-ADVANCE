@@ -1,6 +1,8 @@
 using assignment1.Middleware;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
+using RepositoryContracts;
 using ServiceContracts;
 using Services;
 
@@ -16,6 +18,8 @@ builder.Services.AddMvcCore();
 //builder.Services.AddSingleton<ICountryService,CountriesService>();
 builder.Services.AddScoped<IPersonsService, PersonService>(); //Singleton to have this service available at a lifetime of the application
 builder.Services.AddScoped<ICountryService, CountriesService>();
+builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonsRepository>();
 //Inject DBcontext
 //By Default, an EF is configured Scoped Service. We need to update the injection above
 builder.Services.AddDbContext<ApplicationDBContext>(
