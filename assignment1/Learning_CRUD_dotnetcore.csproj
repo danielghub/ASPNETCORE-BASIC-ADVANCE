@@ -24,4 +24,8 @@
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
+  <!--Gives access to the learning_crud_dotnetcore project-->
+  <ItemGroup>
+    <InternalsVisibleTo Include="CRUDTests"/>
+  </ItemGroup>
 </Project>

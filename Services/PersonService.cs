@@ -13,11 +13,10 @@ namespace Services
     public class PersonService : IPersonsService
     {
         //data store
-        private readonly ICountryService _countryService;
+        //private readonly ICountryService _countryService;
         private readonly IPersonRepository _personsRepository;
-        public PersonService(IPersonRepository personsRepository, ICountryService countryService)
+        public PersonService(IPersonRepository personsRepository)
         {
-            _countryService = countryService;
             _personsRepository = personsRepository;           
         }
         //private PersonResponse ConvertPersonToPersonResponse(Person person)

@@ -48,3 +48,6 @@ app.UseRouting();
 app.MapControllers();
 
 app.Run();
+
+
+public partial class Program { } // make the auto-generated Program accessible programatically, and then an InternalsVisibleTo added in the project level Learning_CRUD_dotnetcore

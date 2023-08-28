@@ -7,13 +7,15 @@ namespace Learning_CRUD_dotnetcore.Controllers
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
+        private readonly ICountryService _countryService;
 
-        public PersonsController(IPersonsService personsService)
+        public PersonsController(IPersonsService personsService, ICountryService countryService)
         {
             _personsService = personsService;
+            _countryService = countryService;
         }
         [Route("persons/index")]
-        [Route("/")]
+        [Route("/")] //"/" means home
         public async Task<IActionResult> Index(string? searchBy, string? searchString)
         {
             ViewBag.SearchFields = new Dictionary<string, string>()
