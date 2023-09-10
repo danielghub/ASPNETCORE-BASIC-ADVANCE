@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Learning_CRUD_dotnetcore.Filters.ActionFilters;
+using Microsoft.AspNetCore.Mvc;
 using ServiceContracts;
 using ServiceContracts.DTO;
 
@@ -16,6 +17,7 @@ namespace Learning_CRUD_dotnetcore.Controllers
         }
         [Route("persons/index")]
         [Route("/")] //"/" means home
+        [TypeFilter(typeof(PersonsListActionFilter)) ]
         public async Task<IActionResult> Index(string? searchBy, string? searchString)
         {
             ViewBag.SearchFields = new Dictionary<string, string>()

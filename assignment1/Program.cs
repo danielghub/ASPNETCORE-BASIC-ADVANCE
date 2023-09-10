@@ -9,6 +9,7 @@ using Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(); // Add all controllers with a predefined Controller Class name and added as a service in the DI;
 builder.Services.AddMvcCore();
+//builder.Host.ConfigureLogging(logging => { logging.AddEventLog(); logging.ClearProviders(); });
 //Best shortcut way to map all the controllers in the route
 
 //add services into IoC container
