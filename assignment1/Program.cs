@@ -1,5 +1,6 @@
 using assignment1.Middleware;
 using Entities;
+using Learning_CRUD_dotnetcore.Filters.ActionFilters;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
 using RepositoryContracts;
@@ -7,7 +8,14 @@ using ServiceContracts;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllersWithViews(); // Add all controllers with a predefined Controller Class name and added as a service in the DI;
+builder.Services.AddControllersWithViews(options => {
+   //options.Filters.Add<ResponseHeaderActionFilter>(5); //Filter without parameter
+   var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+    options.Filters.Add(new ResponseHeaderActionFilter(logger, "X-Key-Global","X-Value-Global",2));
+
+}); 
+
+// Add all controllers with a predefined Controller Class name and added as a service in the DI;
 builder.Services.AddMvcCore();
 //builder.Host.ConfigureLogging(logging => { logging.AddEventLog(); logging.ClearProviders(); });
 //Best shortcut way to map all the controllers in the route
@@ -26,7 +34,6 @@ builder.Services.AddScoped<IPersonRepository, PersonsRepository>();
 builder.Services.AddDbContext<ApplicationDBContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //Telling Aspnet core that we'll be using a sql server
 
-
 /* optional to use to map the controllers
 app.UseRouting(); 
 app.UseEndpoints(endpoints =>
@@ -36,9 +43,10 @@ app.UseEndpoints(endpoints =>
 */
 //app.MapControllerRoute()
 //app.UseValidationMiddleware(); //Validation Middleware, custom created middleware
-//app.MapGet("/", () => "Hello World!");
-var app = builder.Build();
 
+var app = builder.Build();
+//app.MapGet("/", () => "Hello World!");
+//app.UseValidationMiddleware();
 
 if (app.Environment.IsDevelopment())
 {

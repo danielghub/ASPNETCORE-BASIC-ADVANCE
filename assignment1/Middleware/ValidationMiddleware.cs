@@ -8,8 +8,8 @@ namespace assignment1.Middleware
     public class ValidationMiddleware
     {
         private readonly RequestDelegate _next;
-        private string _userName;
-        private string _password;
+        private  string _userName;
+        private  string _password;
         private HttpContext _context;
         public ValidationMiddleware(RequestDelegate next)
         {
@@ -22,9 +22,9 @@ namespace assignment1.Middleware
          
             if(_context.Request.Query.ContainsKey("username") && _context.Request.Query.ContainsKey("password"))
             {
-                string _username = _context.Request.Query["username"];
-                string _password = _context.Request.Query["password"];
-                if(_username == "admin@example.com" && _password == "admin1234")
+                _userName = _context.Request.Query["username"];
+                 _password = _context.Request.Query["password"];
+                if(_userName == "admin@example.com" && _password == "admin1234")
                 {
                     await _context.Response.WriteAsync("Successful Login");
                 }

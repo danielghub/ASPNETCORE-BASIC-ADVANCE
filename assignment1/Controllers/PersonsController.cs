@@ -5,6 +5,8 @@ using ServiceContracts.DTO;
 
 namespace Learning_CRUD_dotnetcore.Controllers
 {
+    [Route("[controller]")]
+    [TypeFilter(typeof(ResponseHeaderActionFilter),Arguments = new object[] {"X-Controller-Header","X-Controller-Value", 3},Order = 3)]
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
@@ -17,7 +19,9 @@ namespace Learning_CRUD_dotnetcore.Controllers
         }
         [Route("persons/index")]
         [Route("/")] //"/" means home
-        [TypeFilter(typeof(PersonsListActionFilter)) ]
+        [TypeFilter(typeof(PersonsListActionFilter), Order = 4) ]
+        [TypeFilter(typeof(ResponseHeaderActionFilter), Arguments = new object[] { "X-Key-Component", "X-Value-Component", 1}, Order = 1)]
+       
         public async Task<IActionResult> Index(string? searchBy, string? searchString)
         {
             ViewBag.SearchFields = new Dictionary<string, string>()
